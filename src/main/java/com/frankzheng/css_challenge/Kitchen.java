@@ -1,9 +1,14 @@
 package com.frankzheng.css_challenge;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class Kitchen implements OrderListener, CourierListener {
+    static Logger logger = LoggerFactory.getLogger(Kitchen.class);
+
     public Kitchen(List<Shelf> shelves, OverflowShelf overflowShelf) {
         this.overflowShelf = overflowShelf;
         this.shelves = shelves;
@@ -31,14 +36,11 @@ public class Kitchen implements OrderListener, CourierListener {
         }
 
         if(!orderPlaced) {
-
             if(!overflowShelf.moveOrderToOtherShelves(shelves)) {
                 Order discardedOrder = overflowShelf.discardOrderRandomly();
-                //TODO: log the discarded order information
-                System.out.printf("Order[%s] has been discarded from overflow shelf%n", discardedOrder.getId());
+                logger.info("Order[{}] has been discarded from overflow shelf", discardedOrder.getId());
                 overflowShelf.placeOrder(order);
             }
-
         }
     }
 
@@ -50,7 +52,7 @@ public class Kitchen implements OrderListener, CourierListener {
 
     @Override
     public void onOrdersFinished() {
-        //check if there are any couriers will arrive
+
     }
 
     @Override
@@ -59,9 +61,7 @@ public class Kitchen implements OrderListener, CourierListener {
         boolean picked = courier.pickUpOrderFromShelves(allShelves);
         if(!picked) {
             //courier not picked order
-            System.out.println("Courier could not pick up any order");
-        } else {
+            logger.info("Courier could not pick up any order");
         }
-
     }
 }

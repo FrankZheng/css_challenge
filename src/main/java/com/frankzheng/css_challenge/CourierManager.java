@@ -1,11 +1,15 @@
 package com.frankzheng.css_challenge;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CourierManager implements Runnable, OrderListener {
+    static Logger logger = LoggerFactory.getLogger(CourierManager.class);
 
     private final List<Courier> courierList = new LinkedList<>();
     private final AtomicBoolean working = new AtomicBoolean(false);
@@ -37,6 +41,7 @@ public class CourierManager implements Runnable, OrderListener {
 
     @Override
     public void run() {
+        logger.debug("start to run...");
 
         working.set(true);
 
@@ -66,5 +71,7 @@ public class CourierManager implements Runnable, OrderListener {
                 e.printStackTrace();
             }
         }
+
+        logger.debug("stopped");
     }
 }

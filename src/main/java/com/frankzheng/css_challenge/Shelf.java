@@ -1,11 +1,14 @@
 package com.frankzheng.css_challenge;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class Shelf {
-
+    static Logger logger = LoggerFactory.getLogger(Shelf.class);
 
     public Shelf(String name, OrderTemperature allowableTemp, int capacity) {
         this.name = name;
@@ -44,7 +47,7 @@ public class Shelf {
     }
 
     public void placeOrder(Order order) {
-        if(order.getTemperature() != allowableTemp) {
+        if(allowableTemp != OrderTemperature.any && order.getTemperature() != allowableTemp) {
             throw new IllegalArgumentException("Order's temperature is disallowed");
         }
 
@@ -52,7 +55,7 @@ public class Shelf {
             throw new IllegalArgumentException(name + " is full, can't place order");
         }
 
-        System.out.printf("Place order[%s] to shelf[%s]%n", order.getId(), name);
+        logger.info("Place order[{}] to shelf[{}]", order.getId(), name);
         orders.add(order);
     }
 
