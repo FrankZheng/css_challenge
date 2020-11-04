@@ -24,6 +24,10 @@ public class Kitchen implements OrderListener, CourierListener {
     synchronized public void serveOrder(Order order) {
         //cook order
 
+        //drop wasted order on shelves
+        for(Shelf shelf : allShelves) {
+            shelf.dropWastedOrder();
+        }
 
         //put order into shelf
         boolean orderPlaced = false;
@@ -35,6 +39,8 @@ public class Kitchen implements OrderListener, CourierListener {
             }
         }
 
+        //if no shelf room for order
+        //check if can get room on overflow shelf
         if(!orderPlaced) {
             if(!overflowShelf.moveOrderToOtherShelves(shelves)) {
                 Order discardedOrder = overflowShelf.discardOrderRandomly();
@@ -57,6 +63,10 @@ public class Kitchen implements OrderListener, CourierListener {
 
     @Override
     synchronized public void onCourierArrival(Courier courier) {
+        //drop wasted shelf
+        for(Shelf shelf : allShelves) {
+            shelf.dropWastedOrder();
+        }
 
         boolean picked = courier.pickUpOrderFromShelves(allShelves);
         if(!picked) {

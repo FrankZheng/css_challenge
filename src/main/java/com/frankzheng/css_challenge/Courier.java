@@ -37,6 +37,10 @@ public class Courier {
         return false;
     }
 
+    public void delivery() {
+        logger.debug("Order[{}] has been delivered", order.getId());
+    }
+
 
 
 

@@ -5,7 +5,7 @@ import java.util.List;
 public class OverflowShelf extends Shelf {
 
     public OverflowShelf(int capacity) {
-        super("Overflow shelf", OrderTemperature.any, capacity);
+        super("Overflow shelf", OrderTemperature.any, capacity, ShelfDecayModifier.overflowShelf);
     }
 
     @Override

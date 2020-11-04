@@ -43,7 +43,7 @@ public class OrderIngestionWorker implements Runnable {
                 String name = jsonObject.getString("name");
                 String temp = jsonObject.getString("temp");
                 int shelfLife = jsonObject.getInt("shelfLife");
-                float decayRate = jsonObject.getFloat("decayRate");
+                double decayRate = jsonObject.getFloat("decayRate");
                 OrderTemperature temperature = parseOrderTemperature(temp);
                 if(temperature == null) {
                     logger.warn("Invalid temperature for order, {}, {}", id, temp);
