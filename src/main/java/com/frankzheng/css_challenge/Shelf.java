@@ -33,6 +33,10 @@ public class Shelf {
         return capacity;
     }
 
+    public List<Order> getOrders() {
+        return orders;
+    }
+
     public boolean hasRoomForOrder(Order order) {
         return order.getTemperature() == allowableTemp && orders.size() < capacity;
 
