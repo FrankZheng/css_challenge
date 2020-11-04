@@ -4,22 +4,29 @@ package com.frankzheng.css_challenge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Shelf {
     static Logger logger = LoggerFactory.getLogger(Shelf.class);
 
-    public Shelf(String name, OrderTemperature allowableTemp, int capacity) {
+    public Shelf(String name, OrderTemperature allowableTemp, int capacity, ShelfDecayModifier shelfDecayModifier) {
         this.name = name;
         this.allowableTemp = allowableTemp;
         this.capacity = capacity;
+        this.shelfDecayModifier = shelfDecayModifier;
     }
 
-    private String name;
-    private OrderTemperature allowableTemp;
-    private int capacity;
+    public Shelf(String name, OrderTemperature allowableTemp, int capacity) {
+        this(name, allowableTemp, capacity, ShelfDecayModifier.singleTempShelf);
+    }
+
+    private final String name;
+    private final OrderTemperature allowableTemp;
+    private final int capacity;
     protected List<Order> orders = new LinkedList<>();
+    private final ShelfDecayModifier shelfDecayModifier;
 
     public String getName() {
         return name;
@@ -60,6 +67,7 @@ public class Shelf {
         }
 
         logger.info("Place order[{}] to shelf[{}]", order.getId(), name);
+        order.setShelfDecayModifier(shelfDecayModifier);
         orders.add(order);
     }
 
@@ -72,6 +80,20 @@ public class Shelf {
             }
         }
         return false;
+    }
+
+    public boolean dropWastedOrder() {
+        Iterator<Order> iterator = orders.iterator();
+        boolean hasWasted = false;
+        while(iterator.hasNext()) {
+            Order order = iterator.next();
+            if(order.isWasted()) {
+                logger.debug("Order[{}] is wasted, dropped from shelf[{}]", order.getId(), name);
+                iterator.remove();
+                hasWasted = true;
+            }
+        }
+        return hasWasted;
     }
 
 }

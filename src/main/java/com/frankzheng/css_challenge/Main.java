@@ -18,7 +18,7 @@ public class Main {
         CourierManager courierManager = new CourierManager();
         courierManager.addCourierListener(kitchen);
 
-        OrderIngestionWorker worker = new OrderIngestionWorker(20);
+        OrderIngestionWorker worker = new OrderIngestionWorker(2);
         worker.addOrderListener(kitchen);
         worker.addOrderListener(courierManager);
 
