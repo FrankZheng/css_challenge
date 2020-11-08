@@ -42,7 +42,7 @@ public class Kitchen implements OrderListener, CourierListener {
         if(!orderPlaced) {
             if(!overflowShelf.moveOrderToOtherShelves(shelves)) {
                 Order discardedOrder = overflowShelf.discardOrderRandomly();
-                logger.info("Order[{}] has been discarded from overflow shelf", discardedOrder.getId());
+                logger.info("Order:{} has been discarded from overflow shelf", discardedOrder.info());
                 overflowShelf.placeOrder(order);
             }
         }
