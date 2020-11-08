@@ -8,15 +8,12 @@ import java.util.List;
 public class Courier {
     static Logger logger = LoggerFactory.getLogger(Courier.class);
 
-    private Order order;
+    private final Order order;
     private long arrivalTimeMills = 0;
-    public Courier() {
-    }
 
-    public void assignOrder(Order order, long currentMills) {
+    public Courier(Order order, long currentMills) {
         this.order = order;
         int sec = RandomUtils.randInt(2, 6);
-
         logger.debug("Order[{}] has been assigned to a courier, will pick up order {} seconds later",
                 order.getId(), sec);
         arrivalTimeMills = currentMills + sec * 1000;
@@ -24,6 +21,10 @@ public class Courier {
 
     public boolean isArrival(long currentMills) {
         return currentMills >= arrivalTimeMills;
+    }
+
+    public Order getOrder() {
+        return order;
     }
 
     public boolean pickUpOrderFromShelves(List<Shelf> shelves) {

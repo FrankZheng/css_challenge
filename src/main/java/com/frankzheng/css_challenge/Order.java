@@ -66,6 +66,11 @@ public class Order {
         return isWasted(System.currentTimeMillis());
     }
 
+    public String info() {
+        return String.format("[%s,%s,%f]",
+                id, temperature.toString(), getValue());
+    }
+
     @Override
     public String toString() {
         return String.format("[%s,%s,%s,%d,%f,%f]",

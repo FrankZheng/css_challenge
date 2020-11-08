@@ -21,15 +21,13 @@ public class Kitchen implements OrderListener, CourierListener {
     final private List<Shelf> allShelves = new LinkedList<>();
 
 
-    synchronized public void serveOrder(Order order) {
-        //cook order
+    @Override
+    synchronized public void onNewOrder(Order order) {
+        logger.info("Order received: {}", order.info());
 
-        //drop wasted order on shelves
-        for(Shelf shelf : allShelves) {
-            shelf.dropWastedOrder();
-        }
+        dropWastedOrderFromAllShelves();
 
-        //put order into shelf
+        //put order into shelves
         boolean orderPlaced = false;
         for(Shelf shelf : allShelves) {
             if(shelf.hasRoomForOrder(order)) {
@@ -48,12 +46,8 @@ public class Kitchen implements OrderListener, CourierListener {
                 overflowShelf.placeOrder(order);
             }
         }
-    }
 
-
-    @Override
-    public void onNewOrder(Order order) {
-        serveOrder(order);
+        printShelvesContent();
     }
 
     @Override
@@ -63,15 +57,33 @@ public class Kitchen implements OrderListener, CourierListener {
 
     @Override
     synchronized public void onCourierArrival(Courier courier) {
-        //drop wasted shelf
-        for(Shelf shelf : allShelves) {
-            shelf.dropWastedOrder();
-        }
+        logger.info("Courier arrived, for order:{}", courier.getOrder().info());
+
+        dropWastedOrderFromAllShelves();
 
         boolean picked = courier.pickUpOrderFromShelves(allShelves);
         if(!picked) {
             //courier not picked order
-            logger.info("Courier could not pick up any order");
+            logger.info("Courier did not pick up any order");
+        } else {
+            logger.info("Order picked up");
+            printShelvesContent();
         }
     }
+
+    void dropWastedOrderFromAllShelves() {
+        for(Shelf shelf : allShelves) {
+            shelf.dropWastedOrder();
+        }
+    }
+
+    void printShelvesContent() {
+        for(Shelf shelf : allShelves) {
+            logger.info("{} has {} orders", shelf.getName(), shelf.orders.size());
+            for(Order order : shelf.orders) {
+                logger.info(order.info());
+            }
+        }
+    }
+
 }

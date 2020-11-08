@@ -4,12 +4,11 @@ package com.frankzheng.css_challenge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class CourierManager implements Runnable, OrderListener {
-    static Logger logger = LoggerFactory.getLogger(CourierManager.class);
+public class CourierDispatcher implements Runnable, OrderListener {
+    static Logger logger = LoggerFactory.getLogger(CourierDispatcher.class);
 
     private final List<Courier> courierList = new LinkedList<>();
     private final AtomicBoolean working = new AtomicBoolean(false);
@@ -44,33 +43,33 @@ public class CourierManager implements Runnable, OrderListener {
 
         working.set(true);
 
-        while(working.get() || !courierList.isEmpty()) {
-            List<Courier> couriersToRemove = new LinkedList<>();
-
-            synchronized (courierList) {
-                for(Courier courier : courierList) {
-                    if(courier.isArrival(System.currentTimeMillis())) {
-                        couriersToRemove.add(courier);
-                        for(CourierListener courierListener : courierListeners) {
-                            courierListener.onCourierArrival(courier);
+        final Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                synchronized (courierList) {
+                    //if no order incoming and all dispatched couriers arrived
+                    if(!working.get() && courierList.isEmpty()) {
+                        timer.cancel();
+                        logger.info("stopped");
+                    } else {
+                        Iterator<Courier> iterator = courierList.iterator();
+                        while (iterator.hasNext()) {
+                            Courier courier = iterator.next();
+                            if(courier.isArrival(System.currentTimeMillis())) {
+                                //notify listeners
+                                for(CourierListener courierListener : courierListeners) {
+                                    courierListener.onCourierArrival(courier);
+                                }
+                                //remove courier from courier list
+                                iterator.remove();
+                            }
                         }
                     }
                 }
-            }
 
-            if(!couriersToRemove.isEmpty()) {
-                synchronized (courierList) {
-                    courierList.removeAll(couriersToRemove);
-                }
             }
-
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        logger.debug("stopped");
+        };
+        timer.scheduleAtFixedRate(timerTask, 0, 200);
     }
 }

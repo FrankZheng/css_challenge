@@ -6,7 +6,7 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        //create shelves
+
         List<Shelf> shelves = new LinkedList<>();
         shelves.add(new Shelf("Hot shelf", OrderTemperature.hot, 10));
         shelves.add(new Shelf("Cold shelf", OrderTemperature.cold, 10));
@@ -15,16 +15,16 @@ public class Main {
 
         Kitchen kitchen = new Kitchen(shelves, overflowShelf);
 
-        CourierManager courierManager = new CourierManager();
-        courierManager.addCourierListener(kitchen);
+        CourierDispatcher courierDispatcher = new CourierDispatcher();
+        courierDispatcher.addCourierListener(kitchen);
 
         OrderIngestionWorker worker = new OrderIngestionWorker(2);
         worker.addOrderListener(kitchen);
-        worker.addOrderListener(courierManager);
+        worker.addOrderListener(courierDispatcher);
 
         List<Thread> threads = new LinkedList<>();
         threads.add(new Thread(worker));
-        threads.add(new Thread(courierManager));
+        threads.add(new Thread(courierDispatcher));
 
         //start all sub threads
         for(Thread thread : threads) {
