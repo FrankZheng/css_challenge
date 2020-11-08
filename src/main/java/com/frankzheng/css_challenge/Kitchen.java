@@ -17,6 +17,19 @@ public class Kitchen implements OrderListener, CourierListener {
     }
 
     final private List<Shelf> shelves;
+
+    public List<Shelf> getShelves() {
+        return shelves;
+    }
+
+    public OverflowShelf getOverflowShelf() {
+        return overflowShelf;
+    }
+
+    public List<Shelf> getAllShelves() {
+        return allShelves;
+    }
+
     final private OverflowShelf overflowShelf;
     final private List<Shelf> allShelves = new LinkedList<>();
 
@@ -43,8 +56,8 @@ public class Kitchen implements OrderListener, CourierListener {
             if(!overflowShelf.moveOrderToOtherShelves(shelves)) {
                 Order discardedOrder = overflowShelf.discardOrderRandomly();
                 logger.info("Order:{} has been discarded from overflow shelf", discardedOrder.info());
-                overflowShelf.placeOrder(order);
             }
+            overflowShelf.placeOrder(order);
         }
 
         printShelvesContent();
@@ -79,8 +92,8 @@ public class Kitchen implements OrderListener, CourierListener {
 
     void printShelvesContent() {
         for(Shelf shelf : allShelves) {
-            logger.info("{} has {} orders", shelf.getName(), shelf.orders.size());
-            for(Order order : shelf.orders) {
+            logger.info("{} has {} orders", shelf.getName(), shelf.getOrders().size());
+            for(Order order : shelf.getOrders()) {
                 logger.info(order.info());
             }
         }
