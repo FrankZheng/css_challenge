@@ -26,8 +26,7 @@ public class CourierManager implements Runnable, OrderListener {
 
     @Override
     public void onNewOrder(Order order) {
-        Courier courier = new Courier();
-        courier.assignOrder(order, System.currentTimeMillis());
+        Courier courier = new Courier(order, System.currentTimeMillis());
 
         synchronized (courierList) {
             courierList.add(courier);
