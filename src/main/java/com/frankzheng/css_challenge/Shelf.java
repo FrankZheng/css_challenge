@@ -66,7 +66,7 @@ public class Shelf {
             throw new IllegalArgumentException(name + " is full, can't place order");
         }
 
-        logger.info("Place order[{}] to shelf[{}]", order.getId(), name);
+        logger.info("Place order:{} to {}", order.info(), name);
         order.setShelfDecayModifier(shelfDecayModifier);
         orders.add(order);
     }
@@ -88,7 +88,7 @@ public class Shelf {
         while(iterator.hasNext()) {
             Order order = iterator.next();
             if(order.isWasted()) {
-                logger.debug("Order[{}] is wasted, dropped from shelf[{}]", order.getId(), name);
+                logger.info("Order:{} is wasted, dropped from {}", order.info(), name);
                 iterator.remove();
                 hasWasted = true;
             }
