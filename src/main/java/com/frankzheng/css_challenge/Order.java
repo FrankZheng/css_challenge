@@ -47,6 +47,14 @@ public class Order {
         this.shelfDecayModifier = shelfDecayModifier;
     }
 
+    public ShelfDecayModifier getShelfDecayModifier() {
+        return shelfDecayModifier;
+    }
+
+    public long getOrderCreationTime() {
+        return orderCreationTime;
+    }
+
     //for testing convenience
     public double getValue(long currTimeMills) {
         long orderAge = (currTimeMills - orderCreationTime) / 1000;
