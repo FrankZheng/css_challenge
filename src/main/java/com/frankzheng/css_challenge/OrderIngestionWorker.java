@@ -19,7 +19,7 @@ public class OrderIngestionWorker implements Runnable {
 
     public OrderIngestionWorker(int ingestRate) {
         if(ingestRate <= 0) {
-            throw new IllegalArgumentException("invalid feedRate parameter");
+            throw new IllegalArgumentException("invalid ingestRate parameter");
         }
         this.ingestRate = ingestRate;
 
