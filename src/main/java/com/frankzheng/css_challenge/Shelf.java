@@ -57,6 +57,10 @@ public class Shelf {
         return orders.isEmpty();
     }
 
+    public ShelfDecayModifier getShelfDecayModifier() {
+        return shelfDecayModifier;
+    }
+
     public void placeOrder(Order order) {
         if(allowableTemp != OrderTemperature.any && order.getTemperature() != allowableTemp) {
             throw new IllegalArgumentException("Order's temperature is disallowed");
